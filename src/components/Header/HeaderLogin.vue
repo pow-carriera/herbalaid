@@ -26,8 +26,8 @@ function loginSubmit() {
     username = response.data.user.username;
     email = response.data.user.email;
     bearer = response.data.jwt;
-
     userAuth.userLogin(username, email, bearer);
+    window.location.reload()
   }).catch((error) => {
     console.log(error)
   });
@@ -55,21 +55,54 @@ function logoutSubmit() {
     <button @click="loginSubmit">Log In</button>
     <button @click="signupSubmit">Sign Up</button>
   </div>
-  <div class="login" v-else>
+  <div class="logout" v-else>
+    <p>Hello {{ userAuth.user.username }}</p>
     <button @click="logoutSubmit">Log Out</button>
   </div>
 </template>
 
 <style scoped>
 button {
-  color: f1f1f1;
+  /* padding: 5px; */
+  margin-left: 5px; 
+  background-color: #f1f1f1;
+  border-color: #91cac2;
+  border-style: solid;
+  border-radius: 5px;
+  color: #315b6b;
+  transition: background-color 0.25s, color 0.25s;
+}
+button:hover {
+  color: #f1f1f1;
+  background-color: #315b6b;
+  border-color: #91cac2;
+  transition: background-color 0.25s, color 0.25s;
 }
 input {
   display: block;
+  width: 150px;
+  margin: 0px 5px 0px 5px;
+  border-style: solid;
+  border-radius: 15px;
+  text-indent: 5px;
+  border-color: #8dcac1;
+  background-color: #f1f1f1;
+}
+p {
+  color: #315b6b;
+}
+textarea:focus, input:focus{
+    outline-color: #315b6b;
+    background-color: #ffffff;
+}
+.logout {
+  display: flex;
+  vertical-align: middle;
+  margin: 50px;
 }
 .login {
   display: flex;
   vertical-align: middle;
-  margin: 50px;
+  margin: 20px;
 }
 </style>

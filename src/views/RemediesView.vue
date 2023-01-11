@@ -1,3 +1,9 @@
+<script setup>
+import RemediesFeed from '../components/MainContent/RemediesFeed.vue';
+</script>
 <template>
-  <h1>Remedies Page</h1>
+  <h2>Remedies Page</h2>
+  <RemediesFeed />
 </template>
+<style scoped>
+</style>

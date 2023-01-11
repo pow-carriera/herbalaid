@@ -5,13 +5,13 @@ import NotFound from '../views/NotFoundView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    // {
+    //   path: '/',
+    //   name: 'home',
+    //   component: HomeView
+    // },
     {
       path: '/',
-      name: 'home',
-      component: HomeView
-    },
-    {
-      path: '/newsfeed',
       name: 'newsfeed',
       component: () => import('../views/NewsfeedView.vue')
     },

@@ -1,3 +1,3 @@
 <template>
-  <h1>Doctors page</h1>
+  <h2>Doctors page</h2>
 </template>

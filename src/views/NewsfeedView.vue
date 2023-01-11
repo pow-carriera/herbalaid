@@ -1,3 +1,11 @@
+<script setup>
+import NewsFeed from '../components/MainContent/NewsFeed.vue';
+</script>
 <template>
-  <h1>News Feed page</h1>
+  <h2>News Feed</h2>
+  <NewsFeed />
 </template>
+
+<style>
+
+</style>

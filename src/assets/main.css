@@ -1,5 +1,15 @@
 @import './base.css';
 
+h2 {
+  text-align: center;
+  color: #315b6b;
+  font-size: 2em;
+}
+
+.content {
+  width: 60%;
+  margin: auto;
+}
 #nav {
   cursor: default;
   background-color: #f1f1f1;

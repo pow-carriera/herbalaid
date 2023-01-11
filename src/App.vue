@@ -21,7 +21,7 @@ import { RouterLink, RouterView } from 'vue-router';
     <nav id="nav">
     <ul>
       <li><RouterLink to="/">Home</RouterLink></li>
-      <li><RouterLink to="/newsfeed">News Feed</RouterLink></li>
+      <!-- <li><RouterLink to="/newsfeed">News Feed</RouterLink></li> -->
       <li><RouterLink to="/remedies">Herbal Remedies</RouterLink></li>
       <li><RouterLink to="/doctors">Doc Support</RouterLink></li>
       <li><RouterLink to="/about">About Us</RouterLink></li>
@@ -34,12 +34,11 @@ import { RouterLink, RouterView } from 'vue-router';
 
 <style scoped>
 .fulltop {
-  width: 100%;
   background-color: #f1f1f1;
 }
 .header-top {
   display: flex;
-  width: 100vh;
+  width: 60vw;
   margin: auto;
   justify-content: space-between;
   background-color: #f1f1f1;
