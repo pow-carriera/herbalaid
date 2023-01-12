@@ -62,8 +62,8 @@ function logoutSubmit() {
 <template>
   <div class="login" v-if="!userAuth.user.username">
     <div>
-      <input type="text" v-model="username" />
-      <input type="text" v-model="password" />
+      <input type="user" id="username" v-model="username" />
+      <input type="password" id="password" v-model="password" />
     </div>
     <button @click="loginSubmit">Log In</button>
     <button @click="signupSubmit">Sign Up</button>

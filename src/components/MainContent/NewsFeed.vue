@@ -39,7 +39,7 @@ initLoad() //Similar to created() {}
     <LocaleListBar v-for="lang in locales" :key="lang.id" :code="lang.code" :name="lang.name"
       @return-code="changeLocale" />
   </div>
-  <h2 v-if="!articles.length" class="center-text colored">No results!</h2>
+  <h2 v-if="!articles.length" class="center-text colored">Loading...</h2>
   <Article v-else v-for="article in articles" 
     :key="article.id" 
     :id="article.id"

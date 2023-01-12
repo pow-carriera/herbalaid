@@ -27,98 +27,101 @@ function loadBearer() {
   console.log(bearer)
 }
 function loadUserID() {
-  userid = user.user.userid
-  console.log(userid)
+  try {
+    userid = user.user.userid
+  } catch {
+
+  }
 }
 //Comments API Handler
 let usercomment = ref("")
 let comments = ref([])
 function getComments() {
-  axios.get('/comments/api::article.article:'+props.id+'/flat')
-    .then((response)=> {
+  axios.get('/comments/api::article.article:' + props.id + '/flat')
+    .then((response) => {
       comments.value = response.data.data
       getComments()
     }
-  )
+    )
 }
 function postComment() {
   loadBearer()
-  axios.post('/comments/api::article.article:'+props.id+"",
-  {
-    content: usercomment.value
-  },
-  bearer
+  axios.post('/comments/api::article.article:' + props.id + "",
+    {
+      content: usercomment.value
+    },
+    bearer
   )
   usercomment = '';
 }
 
 function deleteComment(commentID) {
   loadBearer()
-  axios.delete('/comments/api::article.article:'+ props.id +'/comment/'+ commentID + '?authorId=' + userid,
-  bearer)
-  console.log('/comments/api::article.article:'+ props.id +'/comment/'+ commentID)
+  axios.delete('/comments/api::article.article:' + props.id + '/comment/' + commentID + '?authorId=' + userid,
+    bearer)
+  console.log('/comments/api::article.article:' + props.id + '/comment/' + commentID)
 }
 //Time Formatting Library
 function formatter(date) {
-const dateFormatter = new Intl.DateTimeFormat([], {
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-  weekday: "short",
-});
-const timeFormatter = new Intl.DateTimeFormat([], {
-  hour: "numeric",
-  minute: "numeric",
-});
-function getHumanFriendlyDateString(iso8601_date_string) {
-  const date = new Date(Date.parse(iso8601_date_string));
-  // When are today and yesterday?
-  const today = new Date();
-  const yesterday = new Date().setDate(today.getDate() - 1);
-  // We have to compare the *formatted* dates rather than the actual dates --
-  // for example, if the UTC date and the localised date fall on either side
-  // of midnight.
-  if (dateFormatter.format(date) == dateFormatter.format(today)) {
-    return "Today at " + timeFormatter.format(date);
-  } else if (dateFormatter.format(date) == dateFormatter.format(yesterday)) {
-    return "Yesterday at " + timeFormatter.format(date);
-  } else {
-    return dateFormatter.format(date) + " @ " + timeFormatter.format(date);
+  const dateFormatter = new Intl.DateTimeFormat([], {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    weekday: "short",
+  });
+  const timeFormatter = new Intl.DateTimeFormat([], {
+    hour: "numeric",
+    minute: "numeric",
+  });
+  function getHumanFriendlyDateString(iso8601_date_string) {
+    const date = new Date(Date.parse(iso8601_date_string));
+    // When are today and yesterday?
+    const today = new Date();
+    const yesterday = new Date().setDate(today.getDate() - 1);
+    // We have to compare the *formatted* dates rather than the actual dates --
+    // for example, if the UTC date and the localised date fall on either side
+    // of midnight.
+    if (dateFormatter.format(date) == dateFormatter.format(today)) {
+      return "Today at " + timeFormatter.format(date);
+    } else if (dateFormatter.format(date) == dateFormatter.format(yesterday)) {
+      return "Yesterday at " + timeFormatter.format(date);
+    } else {
+      return dateFormatter.format(date) + " @ " + timeFormatter.format(date);
+    }
   }
-}
-function getHumanFriendlyDelta(iso8601_date_string) {
-  const date = new Date(Date.parse(iso8601_date_string));
-  const now = new Date();
-  const deltaMilliseconds = now - date;
-  const deltaSeconds = Math.floor(deltaMilliseconds / 1000);
-  const deltaMinutes = Math.floor(deltaSeconds / 60);
-  const deltaHours = Math.floor(deltaMinutes / 60);
-  if (deltaSeconds < 5) {
-    return "just now";
-  } else if (deltaSeconds < 60) {
-    return deltaSeconds + " seconds ago";
-  } else if (deltaMinutes == 1) {
-    return "1 minute ago";
-  } else if (deltaMinutes < 60) {
-    return deltaMinutes + " minutes ago";
-  } else if (deltaHours == 1) {
-    return "1 hour ago";
-  } else if (deltaHours < 6) {
-    return deltaHours + " hours ago";
-  } else {
-    return "";
+  function getHumanFriendlyDelta(iso8601_date_string) {
+    const date = new Date(Date.parse(iso8601_date_string));
+    const now = new Date();
+    const deltaMilliseconds = now - date;
+    const deltaSeconds = Math.floor(deltaMilliseconds / 1000);
+    const deltaMinutes = Math.floor(deltaSeconds / 60);
+    const deltaHours = Math.floor(deltaMinutes / 60);
+    if (deltaSeconds < 5) {
+      return "just now";
+    } else if (deltaSeconds < 60) {
+      return deltaSeconds + " seconds ago";
+    } else if (deltaMinutes == 1) {
+      return "1 minute ago";
+    } else if (deltaMinutes < 60) {
+      return deltaMinutes + " minutes ago";
+    } else if (deltaHours == 1) {
+      return "1 hour ago";
+    } else if (deltaHours < 6) {
+      return deltaHours + " hours ago";
+    } else {
+      return "";
+    }
   }
-}
-function timeFormat(date) {
-  let newDate = getHumanFriendlyDelta(date);
-  if (newDate) {
+  function timeFormat(date) {
+    let newDate = getHumanFriendlyDelta(date);
+    if (newDate) {
+      return newDate;
+    } else {
+      newDate = getHumanFriendlyDateString(date);
+    }
     return newDate;
-  } else {
-    newDate = getHumanFriendlyDateString(date);
   }
-  return newDate;
-}
-return timeFormat(date)
+  return timeFormat(date)
 }
 
 //Comments View Handler
@@ -140,20 +143,16 @@ getComments()
 loadUserID()
 </script>
 <template>
-    <div class="content">
+  <div class="content">
     <div class="titlecontainer">
       <div class="displayphoto">
-        <img
-          class="article-image display-photo"
-          :src="displayPhoto"
-          alt="article_image"
-        />
+        <img class="article-image display-photo" :src="displayPhoto" alt="article_image" />
       </div>
       <div class="titletext">
         <h1>{{ title }}</h1>
         <h3 style="float: left">{{ author }}</h3>
         <h4 style="float: right">
-          {{formatter(createdAt)}}
+          {{ formatter(createdAt) }}
         </h4>
       </div>
     </div>
@@ -173,26 +172,26 @@ loadUserID()
         <div>
           <div v-for="comment in comments" class="commententry">
             <p style="line-height: 0px">
-              <b> {{comment.author.name}} </b> {{ formatter(comment.createdAt) }}
+              <b> {{ comment.author.name }} </b> ({{ formatter(comment.createdAt) }})
+              <button style="display: inline" v-if="userid === comment.author.id" @click="deleteComment(comment.id)">Delete</button>
             </p>
             <p style="margin-left: 10px">
-              {{comment.content}}
+              {{ comment.content }}
             </p>
-            <button v-show="userid === comment.author.id" @click="deleteComment(comment.id)">Delete</button>
           </div>
         </div>
         <div class="commententry userinput">
-            <p style="line-height: 0px">
-              <b>Comment Here:</b>
-            </p>
-            <p style="margin-left: 10px">
-              <textarea type="text" v-model="usercomment"></textarea><button @click="postComment()">
-                Comment
-              </button>
-            </p>
-          </div>
-            </div>
+          <p style="line-height: 0px">
+            <b>Comment Here:</b>
+          </p>
+          <p style="margin-left: 10px">
+            <textarea type="text" v-model="usercomment"></textarea><button @click="postComment()">
+              Comment
+            </button>
+          </p>
+        </div>
       </div>
+    </div>
   </div>
 </template>
 <style scoped>
@@ -206,12 +205,14 @@ button {
   color: #315b6b;
   transition: background-color 0.25s, color 0.25s;
 }
+
 button:hover {
   color: #f1f1f1;
   background-color: #315b6b;
   border-color: #91cac2;
   transition: background-color 0.25s, color 0.25s;
 }
+
 textarea {
   width: calc(100% - 16px);
   height: 50px;
@@ -221,9 +222,11 @@ textarea {
   border-color: #2a5b6b;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
+
 .text-align {
   text-align: center;
 }
+
 .commententry {
   border-style: solid;
   border-radius: 10px;
@@ -231,20 +234,25 @@ textarea {
   background-color: #ffffff;
   margin: 5px;
 }
+
 .userinput {
   background-color: #f1f1f1;
   border-color: black;
 }
+
 h3 {
   display: inline;
 }
+
 .titlebar {
   display: inline;
 }
+
 .article-image {
   width: 75px;
   height: 75px;
 }
+
 .content {
   width: 50%;
   margin: auto;
@@ -257,16 +265,19 @@ h3 {
   margin-bottom: 25px;
   margin-top: 50px;
 }
+
 .display-photo {
   width: 100%;
   border-radius: 50%;
   border-style: solid;
   border-color: #2a5b6b;
 }
+
 .titlecontainer {
   display: flex;
   align-items: center;
 }
+
 .titletext {
   margin-left: 20px;
 }

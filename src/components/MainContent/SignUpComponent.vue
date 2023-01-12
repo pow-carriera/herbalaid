@@ -39,7 +39,7 @@ export default {
         })
         .then((response) => {
           console.log(response.data);
-        }).error((error)=> {
+        }).catch((error)=> {
           Swal.fire({
           title: "Something went wrong",
           text: "There's a problem with the server.",
