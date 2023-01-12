@@ -1,13 +1,14 @@
 <script setup>
 import axios from 'axios';
 import { ref } from 'vue';
-import { defineProps } from 'vue';
+import { defineProps, defineEmits } from 'vue';
+import LocaleListBar from './LocaleListBar.vue';
 
 const props = defineProps(['tagName'])
 
 </script>
 <template>
-<button class="tagbutton" @click="check">{{ tagName }}</button>
+<button class="tagbutton" @click="this.$emit('return-name', tagName)" >{{ tagName }}</button>
 </template>
 <style>
 .tagbutton {

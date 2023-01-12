@@ -1,3 +1,3 @@
 <template>
-  <h2>Not Found</h2>
+  <h2 class="hero-title">Not Found</h2>
 </template>

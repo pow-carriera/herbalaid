@@ -1,9 +1,15 @@
 <script>
-
+export default {
+  methods: {
+    home() {
+      this.$router.push('/')
+    }
+  }
+}
 </script>
 
 <template>
-  <div class="titlebar">
+  <div class="titlebar" @click="home">
     <div class="header">
       <div>
         <img src="/logo.png" alt="">

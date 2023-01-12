@@ -2,48 +2,8 @@
 import { checkCompatEnabled, parserOptions } from '@vue/compiler-dom';
 import { defineProps, ref, reactive, watch } from 'vue';
 import axios from 'axios';
-import RemediesEntry from './RemediesEntry.vue';
-const props = defineProps(['id', 'displayPhoto', 'title', 'author', 'content', 'createdAt'])
+const props = defineProps(['displayPhoto', 'name', 'content'])
 
-//User Authentication Handler
-let user = reactive({})
-let bearer = reactive({})
-let logged = ref(null);
-
-if (!JSON.parse(localStorage.getItem("user"))) { //Check if logged in
-  logged = false;
-} else {
-  logged = true;
-  user = JSON.parse(localStorage.getItem("user"))
-}
-
-function loadBearer() {
-  bearer = {
-    headers: {
-      Authorization: "Bearer " + user.user.bearer
-    }
-  }
-  console.log(bearer)
-}
-//Comments API Handler
-let usercomment = ref("")
-let comments = ref([])
-function getComments() {
-  axios.get('/comments/api::article.article:'+props.id+'/flat')
-    .then((response)=> comments.value = response.data.data)
-}
-function postComment() {
-  loadBearer()
-  axios.post('/comments/api::article.article:'+props.id+"",
-  {
-    content: usercomment.value
-  },
-  bearer
-  )
-  getComments()
-}
-
-//Time Formatting Library
 function formatter(date) {
 const dateFormatter = new Intl.DateTimeFormat([], {
   year: "numeric",
@@ -105,77 +65,24 @@ function timeFormat(date) {
 }
 return timeFormat(date)
 }
-
-//Comments View Handler
-let showcoms = ref(false)
-let showcomsmsg = "Show"
-function setComs() {
-  if (showcoms.value == false) {
-    showcoms.value = true;
-    showcomsmsg = "Hide";
-  } else {
-    showcoms.value = false;
-    showcomsmsg = "Show"
-  }
-  console.log(showcoms.value)
-}
-
-//Created Hook
-getComments()
 </script>
 <template>
     <div class="content">
-    <div class="titlecontainer">
-      <div class="displayphoto">
-        <img
-          class="article-image display-photo"
-          :src="displayPhoto"
-          alt="article_image"
-        />
-      </div>
-      <div class="titletext">
-        <h1>{{ title }}</h1>
-        <h3 style="float: left">{{ author }}</h3>
-        <h4 style="float: right">
-          {{formatter(createdAt)}}
-        </h4>
-      </div>
-    </div>
-    <div v-html="content"></div>
-    <div>
-      <h2 v-if="logged">
-        Comments:
-        <button @click="setComs()">
-          {{ showcomsmsg }}
-        </button>
-      </h2>
-      <div v-if="!logged" class="text-align">Log in to view comments!</div>
-      <div v-else v-show="!comments.length" class="text-align">
-        <p v-show="showcoms">Be the first to comment!</p>
-      </div>
-      <div v-if="logged" v-show="showcoms">
-        <div>
-          <div v-for="comment in comments" class="commententry">
-            <p style="line-height: 0px">
-              <b> {{comment.author.name}} </b> {{ formatter(comment.createdAt) }}
-            </p>
-            <p style="margin-left: 10px">
-              {{comment.content}}
-            </p>
-          </div>
+    <div class="paddit">
+      <div class="titlecontainer">
+        <div class="displayphoto">
+          <img
+            class="article-image display-photo"
+            :src="displayPhoto"
+            alt="article_image"
+          />
         </div>
-        <div class="commententry userinput">
-            <p style="line-height: 0px">
-              <b>Comment Here:</b>
-            </p>
-            <p style="margin-left: 10px">
-              <textarea type="text" v-model="usercomment"></textarea><button @click="postComment()">
-                Comment
-              </button>
-            </p>
-          </div>
-            </div>
+        <div class="titletext">
+          <h1>{{ name }}</h1>
+        </div>
       </div>
+      <div v-html="content"></div>
+    </div>
   </div>
 </template>
 <style scoped>
@@ -228,6 +135,9 @@ h3 {
   width: 75px;
   height: 75px;
 }
+.paddit {
+  margin-top: 25px;
+}
 .content {
   width: 50%;
   margin: auto;
@@ -241,8 +151,7 @@ h3 {
   margin-top: 50px;
 }
 .display-photo {
-  width: 100%;
-  border-radius: 50%;
+  border-radius: 25%;
   border-style: solid;
   border-color: #2a5b6b;
 }

@@ -3,42 +3,95 @@ import LocaleListBar from './LocaleListBar.vue';
 import RemediesTag from './RemediesTag.vue';
 import { ref } from 'vue';
 import axios from 'axios';
-let tags = ref([])
-let selectedTag = ref("tag_name")
+import RemediesEntry from './RemediesEntry.vue';
+//Tag Sort Handler
+let tags = ref([]);
+let tagSort = ref("tag_name");
 function getTags() {
-  axios.get('/remedy-tags?sort='+ selectedTag.value)
-    .then((response)=> tags.value = response.data.data)
-  console.log("func: " + selectedTag.value)
+  axios.get('/remedy-tags?sort=' + tagSort.value + "&locale=" + locale.value + "&populate=*")
+    .then((response) => tags.value = response.data.data)
+  console.log("func: " + tagSort.value)
 }
 
-//Created Hook
-getTags(selectedTag)
+//Tag Query handler
+let selectedTag = ref("all remedies");
+function getTagName(tag) {
+  selectedTag.value = tag;
+}
+//Remedies Handler
+let remedies = ref([])
+function getRemedies() {
+  axios.get('/remedies?populate=display_photo&sort=createdAt:desc&locale=' + locale.value)
+    .then((response) => remedies.value = response.data.data)
+    console.log(remedies.value);
+}
+function getTaggedRemedies() {
+      axios
+        .get(
+          "/remedies?filters[remedy_tags][tag_name][$eq]=" +
+            selectedTag.value +
+            "&locale=" +
+            locale.value +
+            "&sort=createdAt:desc&populate=*"
+        )
+        .then((response) => {
+          remedies.value = response.data.data;
+          console.log(remedies.value);
+        });
+    }
+//Localization Handler
+let locale = ref("en");
+let locales = ref([]);
+
+function getLocales() {
+  axios.get('i18n/locales')
+    .then((response) => { locales.value = response.data })
+}
+
+function changeLocale(newLocale) {
+  locale.value = newLocale
+  getRemedies()
+  console.log(locale.value)
+}
+
+function initLoad() {
+  getTags(selectedTag)
+  getRemedies()
+  getLocales()
+}
+
+initLoad() //Similar to created() {}
 </script>
 <template>
-  <LocaleListBar />
-  <h2>Search by category</h2>
+  <div class="center-text">
+    <p style="display: inline">Language: </p>
+    <LocaleListBar v-for="lang in locales" :key="lang.code" :name="lang.name" :code="lang.code"  @return-code="changeLocale" />
+  </div>
+  <h2 class="center-text">Search by category</h2>
   <div class="tagbuttons">
     <div>
       <p>
         Category Sort:
-        <select name="tags" id="tags" v-model="selectedTag">
+        <select name="tags" id="tags" v-model="tagSort">
           <option value="tag_name">alphabetical (ascending)</option>
           <option value="tag_name:desc">alphabetical (descending)</option>
           <option value="frequency:desc">more frequent</option>
           <option value="severity:desc">harsher</option>
         </select>
-        <button class="sortbutton" @click="getTags(selectedTag)">Sort</button>
+        <button class="sortbutton" @click="getTags(tagSort)">Sort</button>
       </p>
     </div>
   </div>
   <div class="tagbuttons">
-    <RemediesTag class="specialtag"
-    :tag-name="'all remedies'"
-    />
-    <RemediesTag v-for="tag in tags"
-    :tag-name="tag.attributes.tag_name"
-    />
+    <RemediesTag :tag-name="'all remedies'" @click="getRemedies()" />
+    <RemediesTag v-for="tag in tags" :tag-name="tag.attributes.tag_name" @return-name="getTagName" @click="getTaggedRemedies()" />
   </div>
+  <RemediesEntry v-for="remedy in remedies"
+  :name="remedy.attributes.name"
+  :content="remedy.attributes.content"
+  :createdAt="remedy.attributes.createdAt"
+  :display-photo="remedy.attributes.display_photo.data.attributes.url"
+  />
 </template>
 <style scoped>
 select {

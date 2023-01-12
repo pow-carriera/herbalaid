@@ -1,14 +1,20 @@
 @import './base.css';
 
-h2 {
+.hero-title {
   text-align: center;
   color: #315b6b;
   font-size: 2em;
+  line-height: 10px;
 }
-
 .content {
   width: 60%;
   margin: auto;
+}
+.center-text {
+  text-align: center;
+}
+p {
+  color:#315b6b;
 }
 #nav {
   cursor: default;

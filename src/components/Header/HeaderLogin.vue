@@ -3,12 +3,11 @@ import { ref, watch } from 'vue';
 import { routerKey, RouterLink, RouterView, useRoute, useRouter } from 'vue-router';
 import { useUserAuthStore } from '../../stores/userAuth';
 import axios from "axios";
-
+import Swal from 'sweetalert2';
 const router = useRouter();
 const route = useRoute();
 
 const userAuth = useUserAuthStore();
-console.log(import.meta.env.VITE_API)
 //Log-in handlers
 let username = ref("");
 let password = ref("");
@@ -29,7 +28,18 @@ function loginSubmit() {
     userAuth.userLogin(username, email, bearer);
     window.location.reload()
   }).catch((error) => {
-    console.log(error)
+    let errormsg;
+    console.log()
+    try { errormsg = error.response.data.error.details.errors[0].message
+    } catch {
+      errormsg = error.response.data.error.message
+    }
+    Swal.fire({
+      title: 'Error!',
+      text: errormsg,
+      icon: 'error',
+      confirmButtonText: 'Try again'
+    })
   });
 }
 function signupSubmit() {
@@ -64,7 +74,7 @@ function logoutSubmit() {
 <style scoped>
 button {
   /* padding: 5px; */
-  margin-left: 5px; 
+  margin-left: 5px;
   background-color: #f1f1f1;
   border-color: #91cac2;
   border-style: solid;
@@ -72,12 +82,14 @@ button {
   color: #315b6b;
   transition: background-color 0.25s, color 0.25s;
 }
+
 button:hover {
   color: #f1f1f1;
   background-color: #315b6b;
   border-color: #91cac2;
   transition: background-color 0.25s, color 0.25s;
 }
+
 input {
   display: block;
   width: 150px;
@@ -88,18 +100,23 @@ input {
   border-color: #8dcac1;
   background-color: #f1f1f1;
 }
+
 p {
   color: #315b6b;
 }
-textarea:focus, input:focus{
-    outline-color: #315b6b;
-    background-color: #ffffff;
+
+textarea:focus,
+input:focus {
+  outline-color: #315b6b;
+  background-color: #ffffff;
 }
+
 .logout {
   display: flex;
   vertical-align: middle;
   margin: 50px;
 }
+
 .login {
   display: flex;
   vertical-align: middle;
