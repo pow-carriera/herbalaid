@@ -30,7 +30,11 @@ let usercomment = ref("")
 let comments = ref([])
 function getComments() {
   axios.get('/comments/api::article.article:'+props.id+'/flat')
-    .then((response)=> comments.value = response.data.data)
+    .then((response)=> {
+      comments.value = response.data.data
+      getComments()
+    }
+  )
 }
 function postComment() {
   loadBearer()
@@ -40,7 +44,6 @@ function postComment() {
   },
   bearer
   )
-  getComments()
 }
 
 //Time Formatting Library
