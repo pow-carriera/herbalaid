@@ -13,6 +13,7 @@ let username = ref("");
 let password = ref("");
 let email = ref("");
 let bearer = ref("");
+let userid = ref("")
 function loginSubmit() {
   axios({
     method: 'post',
@@ -25,7 +26,9 @@ function loginSubmit() {
     username = response.data.user.username;
     email = response.data.user.email;
     bearer = response.data.jwt;
-    userAuth.userLogin(username, email, bearer);
+    userid = response.data.user.id
+    userAuth.userLogin(username, email, bearer, userid);
+    console.log(response.data)
     window.location.reload()
   }).catch((error) => {
     let errormsg;

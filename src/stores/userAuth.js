@@ -8,10 +8,11 @@ export const useUserAuthStore = defineStore('user', {
     }
   },
   actions: {
-    userLogin(username, email, bearer) {
+    userLogin(username, email, bearer, userid) {
       this.user.username = username
       this.user.email = email
       this.user.bearer = bearer
+      this.user.userid = userid
     },
     userLogout() {
       localStorage.removeItem("user")

@@ -7,6 +7,7 @@ const props = defineProps(['id', 'displayPhoto', 'title', 'author', 'content', '
 
 //User Authentication Handler
 let user = reactive({})
+let userid = reactive({})
 let bearer = reactive({})
 let logged = ref(null);
 
@@ -24,6 +25,10 @@ function loadBearer() {
     }
   }
   console.log(bearer)
+}
+function loadUserID() {
+  userid = user.user.userid
+  console.log(userid)
 }
 //Comments API Handler
 let usercomment = ref("")
@@ -44,8 +49,15 @@ function postComment() {
   },
   bearer
   )
+  usercomment = '';
 }
 
+function deleteComment(commentID) {
+  loadBearer()
+  axios.delete('/comments/api::article.article:'+ props.id +'/comment/'+ commentID + '?authorId=' + userid,
+  bearer)
+  console.log('/comments/api::article.article:'+ props.id +'/comment/'+ commentID)
+}
 //Time Formatting Library
 function formatter(date) {
 const dateFormatter = new Intl.DateTimeFormat([], {
@@ -125,6 +137,7 @@ function setComs() {
 
 //Created Hook
 getComments()
+loadUserID()
 </script>
 <template>
     <div class="content">
@@ -165,6 +178,7 @@ getComments()
             <p style="margin-left: 10px">
               {{comment.content}}
             </p>
+            <button v-show="userid === comment.author.id" @click="deleteComment(comment.id)">Delete</button>
           </div>
         </div>
         <div class="commententry userinput">
