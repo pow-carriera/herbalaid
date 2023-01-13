@@ -1,6 +1,7 @@
 <script setup>
 import HeaderLogin from './components/Header/HeaderLogin.vue'
 import HeaderTitle from './components/Header/HeaderTitle.vue'
+import FooterComponent from './components/Footer/FooterComponent.vue'
 import { ref, watch } from 'vue';
 import { RouterLink, RouterView } from 'vue-router';
 </script>
@@ -30,6 +31,7 @@ import { RouterLink, RouterView } from 'vue-router';
   </header>
 
   <RouterView />
+  <FooterComponent />
 </template>
 
 <style scoped>

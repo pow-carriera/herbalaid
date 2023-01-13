@@ -62,10 +62,14 @@ export default {
       :display-photo="doctor.attributes.display_photo.data.attributes.url"
       :description="doctor.attributes.description"
     />
+  <!-- <div v-if="doctors.length === 0" class="filler"> -->
   </div>
 </template>
 
 <style scoped>
+.filler {
+  height: 50vh;
+}
 h1 {
   text-align: center;
 }

@@ -53,7 +53,9 @@ initLoad() //Similar to created() {}
 .colored {
   color: #315b6b;
 }
-
+.filler {
+  height: 50vh;
+}
 .localebutton {
   padding: 5px;
   margin: 5px;
