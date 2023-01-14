@@ -23,22 +23,24 @@ let remedies = ref([])
 function getRemedies() {
   axios.get('/remedies?populate=display_photo&sort=createdAt:desc&locale=' + locale.value)
     .then((response) => remedies.value = response.data.data)
-    console.log(remedies.value);
+  console.log(remedies.value);
 }
-function getTaggedRemedies() {
-      axios
-        .get(
-          "/remedies?filters[remedy_tags][tag_name][$eq]=" +
-            selectedTag.value +
-            "&locale=" +
-            locale.value +
-            "&sort=createdAt:desc&populate=*"
-        )
-        .then((response) => {
-          remedies.value = response.data.data;
-          console.log(remedies.value);
-        });
-    }
+function getTaggedRemedies(tagsorter) {
+  axios
+    .get(
+      "/remedies?filters[remedy_tags][tag_name][$eq]=" +
+      tagsorter +
+      "&locale=" +
+      locale.value +
+      "&sort=createdAt:desc&populate=*"
+    )
+    .then((response) => {
+      remedies.value = response.data.data;
+      console.log(remedies.value);
+      console.log("Tag: " + selectedTag.value)
+    });
+}
+
 //Localization Handler
 let locale = ref("en");
 let locales = ref([]);
@@ -65,7 +67,8 @@ initLoad() //Similar to created() {}
 <template>
   <div class="center-text">
     <p style="display: inline">Language: </p>
-    <LocaleListBar v-for="lang in locales" :key="lang.code" :name="lang.name" :code="lang.code"  @return-code="changeLocale" />
+    <LocaleListBar v-for="lang in locales" :key="lang.code" :name="lang.name" :code="lang.code"
+      @return-code="changeLocale" />
   </div>
   <h2 class="center-text">Search by category</h2>
   <div class="tagbuttons">
@@ -84,14 +87,10 @@ initLoad() //Similar to created() {}
   </div>
   <div class="tagbuttons">
     <RemediesTag :tag-name="'all remedies'" @click="getRemedies()" />
-    <RemediesTag v-for="tag in tags" :tag-name="tag.attributes.tag_name" @return-name="getTagName" @click="getTaggedRemedies()" />
+    <RemediesTag v-for="tag in tags" :tag-name="tag.attributes.tag_name" @return-name="getTaggedRemedies(tag.attributes.tag_name)" />
   </div>
-  <RemediesEntry v-for="remedy in remedies"
-  :name="remedy.attributes.name"
-  :content="remedy.attributes.content"
-  :createdAt="remedy.attributes.createdAt"
-  :display-photo="remedy.attributes.display_photo.data.attributes.url"
-  />
+  <RemediesEntry v-for="remedy in remedies" :name="remedy.attributes.name" :content="remedy.attributes.content"
+    :createdAt="remedy.attributes.createdAt" :display-photo="remedy.attributes.display_photo.data.attributes.url" />
 </template>
 <style scoped>
 select {
