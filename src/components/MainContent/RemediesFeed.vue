@@ -37,7 +37,7 @@ function getTaggedRemedies(tagsorter) {
     .then((response) => {
       remedies.value = response.data.data;
       console.log(remedies.value);
-      console.log("Tag: " + selectedTag.value)
+      console.log("Tag: " + tagsorter)
     });
 }
 
@@ -86,8 +86,8 @@ initLoad() //Similar to created() {}
     </div>
   </div>
   <div class="tagbuttons">
-    <RemediesTag :tag-name="'all remedies'" @click="getRemedies()" />
-    <RemediesTag v-for="tag in tags" :tag-name="tag.attributes.tag_name" @return-name="getTaggedRemedies(tag.attributes.tag_name)" />
+    <RemediesTag :name="'all remedies'" @click="getRemedies()" />
+    <RemediesTag v-for="tag in tags" :name="tag.attributes.tag_name" @return-tag="getTaggedRemedies" />
   </div>
   <RemediesEntry v-for="remedy in remedies" :name="remedy.attributes.name" :content="remedy.attributes.content"
     :createdAt="remedy.attributes.createdAt" :display-photo="remedy.attributes.display_photo.data.attributes.url" />
