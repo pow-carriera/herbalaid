@@ -4,6 +4,9 @@ import RemediesTag from './RemediesTag.vue';
 import { ref } from 'vue';
 import axios from 'axios';
 import RemediesEntry from './RemediesEntry.vue';
+import RemediesEntryQueried from './RemediesEntryQueried.vue';
+import Swal from 'sweetalert2';
+
 //Tag Sort Handler
 let tags = ref([]);
 let tagSort = ref("tag_name");
@@ -40,7 +43,28 @@ function getTaggedRemedies(tagsorter) {
       console.log("Tag: " + tagsorter)
     });
 }
-
+//Remedy Query Handler
+let querystr = "";
+let remediesquery = ref([]);
+function getQueries() {
+  axios.get('/fuzzy-search/search?query=' + querystr)
+    .then((response) => {
+      remediesquery.value = response.data.remedies
+      remedies.value = "";
+      console.log(remediesquery.value)
+      console.log(response.data.remedies)
+      console.log(response.data.remedies)
+      if (!remediesquery.value.length) {
+        getRemedies()
+        Swal.fire({
+          title: 'Warning!',
+          text: "No search results! Redirecting to all remedies.",
+          icon: 'warning',
+          confirmButtonText: 'Try again'
+        })
+      }
+    })
+}
 //Localization Handler
 let locale = ref("en");
 let locales = ref([]);
@@ -70,8 +94,12 @@ initLoad() //Similar to created() {}
     <LocaleListBar v-for="lang in locales" :key="lang.code" :name="lang.name" :code="lang.code"
       @return-code="changeLocale" />
   </div>
-  <h2 class="center-text">Search by category</h2>
-  <div class="tagbuttons">
+  <div class="center-text">
+    <h2 class="center-text">Search by Text</h2>
+    <input type="text" v-model="querystr" /><button class="sortbutton" @click="getQueries()">Search</button>
+  </div>
+  <h2 class="center-text" v-show="false">Search by category</h2>
+  <div class="tagbuttons" v-show="false">
     <div>
       <p>
         Category Sort:
@@ -85,12 +113,15 @@ initLoad() //Similar to created() {}
       </p>
     </div>
   </div>
-  <div class="tagbuttons">
+  <div class="tagbuttons" v-show="false">
     <RemediesTag :name="'all remedies'" @click="getRemedies()" />
     <RemediesTag v-for="tag in tags" :name="tag.attributes.tag_name" @return-tag="getTaggedRemedies" />
   </div>
   <RemediesEntry v-for="remedy in remedies" :name="remedy.attributes.name" :content="remedy.attributes.content"
     :createdAt="remedy.attributes.createdAt" :display-photo="remedy.attributes.display_photo.data.attributes.url" />
+
+  <RemediesEntryQueried v-for="remedyq in remediesquery" :name="remedyq.name" :content="remedyq.content"
+    :createdAt="remedyq.createdAt" />
 </template>
 <style scoped>
 select {

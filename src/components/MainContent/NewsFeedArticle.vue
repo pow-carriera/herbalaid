@@ -248,11 +248,6 @@ h3 {
   display: inline;
 }
 
-.article-image {
-  width: 75px;
-  height: 75px;
-}
-
 .content {
   width: 50%;
   margin: auto;
@@ -267,7 +262,8 @@ h3 {
 }
 
 .display-photo {
-  width: 100%;
+  height: 70px;
+  width: 70px;
   border-radius: 50%;
   border-style: solid;
   border-color: #2a5b6b;
